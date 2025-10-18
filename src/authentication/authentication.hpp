@@ -3,29 +3,54 @@
 
 #include <string>
 #include <memory>
+#include <optional>
+#include <unordered_map>
+#include "hashing.hpp"
 
 namespace opus
 {
     namespace auth
     {
+        /**
+         * @brief Authentication result codes
+         */
+        enum class AuthResult
+        {
+            SUCCESS,             // Authentication successful
+            INVALID_CREDENTIALS, // Username or password incorrect
+            USER_NOT_FOUND,      // User doesn't exist
+            SYSTEM_ERROR         // System-level error occurred
+        };
 
         /**
          * @brief Represents a user in the system with authentication and role information
          */
-        struct User
+        class User
         {
-            std::string username; // User's unique identifier
-            std::string password; // User's password (to be encrypted in future)
-            std::string role;     // User's role (admin, standard, etc.)
+        public:
+            User(const std::string &username, const std::string &hashedPassword, const std::string &role);
 
-            User() = default;
-            ~User() = default;
+            const std::string &getUsername() const { return username; }
+            const std::string &getRole() const { return role; }
+            const std::string &getHashedPassword() const { return hashedPassword; }
 
-            User(const User &) = delete;            // Prevent copying
-            User &operator=(const User &) = delete; // Prevent copy assignment
+            void setUsername(std ::string username)
+            {
+                this->username = username;
+            }
+            void setRole(std ::string role)
+            {
+                this->role = role;
+            }
+            void setPassword(std ::string password)
+            {
+                this->hashedPassword = password;
+            }
 
-            User(User &&) = default;            // Allow moving
-            User &operator=(User &&) = default; // Allow move assignment
+        private:
+            std::string username;       // User's unique identifier
+            std::string hashedPassword; // Stored hashed password
+            std::string role;           // User's role (admin, standard, etc.)
         };
 
         /**
@@ -41,12 +66,21 @@ namespace opus
             static AuthenticationManager &getInstance();
 
             /**
-             * @brief Authenticate a user from configuration file
-             * @param configFile Path to the configuration file
-             * @param username Username to authenticate
-             * @return std::unique_ptr<User> if user is found, nullptr otherwise
+             * @brief Register a new user
+             * @param username The username to register
+             * @param plainPassword The plain text password (will be hashed)
+             * @param role The user's role
+             * @return AuthResult indicating the result of the registration
              */
-            std::unique_ptr<User> authenticateUser(const std::string &configFile, const std::string &username) const;
+            AuthResult registerUser(const std::string &configFile, const std::string &username, const std::string &plainPassword, const std::string &role);
+
+            /**
+             * @brief Authenticate a user with username and password
+             * @param username The username to authenticate
+             * @param plainPassword The plain text password to verify
+             * @return pair of AuthResult and optional User object
+             */
+            std::pair<AuthResult, std::optional<User>> authenticateUser(const std::string &configFile, const std::string &username, const std::string &plainPassword) const;
 
             /**
              * @brief Check if user has specific permission
@@ -57,7 +91,7 @@ namespace opus
             bool hasPermission(const User &user, const std::string &permission) const;
 
         private:
-            AuthenticationManager() = default; // Private constructor for singleton
+            AuthenticationManager() = default;
             ~AuthenticationManager() = default;
 
             AuthenticationManager(const AuthenticationManager &) = delete;
@@ -69,6 +103,17 @@ namespace opus
              * @return Trimmed string
              */
             std::string trim(const std::string &str) const;
+
+            /**
+             * @brief Verify if a plain password matches a stored hash
+             * @param plainPassword The password to verify
+             * @param storedHash The stored hash to compare against
+             * @return true if password matches, false otherwise
+             */
+            bool verifyPassword(const std::string &plainPassword, const std::string &storedHash) const;
+
+            // Add storage for users (in memory for now, could be extended to database)
+            std::unordered_map<std::string, User> users;
         };
 
     } // namespace auth

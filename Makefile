@@ -1,6 +1,7 @@
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -O2
 INCLUDES = -I./src
+LDFLAGS = -lssl -lcrypto
 
 # Output binary name
 TARGET = opus
@@ -21,7 +22,7 @@ all: $(TARGET)
 
 # Linking
 $(TARGET): $(OBJS)
-	$(CXX) $(OBJS) -o $(TARGET)
+	$(CXX) $(OBJS) $(LDFLAGS) -o $(TARGET)
 
 # Compilation with dependency generation
 %.o: %.cpp
