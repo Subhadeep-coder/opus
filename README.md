@@ -40,7 +40,7 @@ opus/
 - [x] Basic configuration file setup
 - [x] Multi-user support in configuration
 - [x] Basic username/password authentication
-- [ ] Password hashing and encryption
+- [x] Password hashing and encryption
 - [ ] Session management
 - [ ] Access control and permissions system
 - [ ] SSL/TLS support for secure connections
