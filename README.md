@@ -40,17 +40,17 @@ opus/
 - [x] Basic configuration file setup
 - [x] Multi-user support in configuration
 - [x] Basic username/password authentication
-- [ ] Password hashing and encryption
+- [x] Password hashing and encryption
 - [ ] Session management
 - [ ] Access control and permissions system
 - [ ] SSL/TLS support for secure connections
 
 ### Core Cache Features
-- [ ] Basic key-value store implementation
-- [ ] String data type support
-- [ ] List data type support
+- [X] Basic key-value store implementation
+- [x] String data type support
+- [X] List data type support
 - [ ] Hash data type support
-- [ ] Set data type support
+- [X] Set data type support
 - [ ] Sorted set data type support
 - [ ] TTL (Time To Live) support for keys
 - [ ] Memory usage monitoring
