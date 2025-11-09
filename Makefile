@@ -10,9 +10,10 @@ TARGET = opus
 SRC_DIR = src
 AUTH_DIR = $(SRC_DIR)/authentication
 CMD_DIR = $(SRC_DIR)/command
+STORAGE_DIR = $(SRC_DIR)/storage
 
 # Source files
-SRCS = $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(AUTH_DIR)/*.cpp) $(wildcard $(CMD_DIR)/*.cpp)
+SRCS = $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(AUTH_DIR)/*.cpp) $(wildcard $(CMD_DIR)/*.cpp) $(wildcard $(STORAGE_DIR)/*.cpp)
 OBJS = $(SRCS:.cpp=.o)
 
 # Header files for dependency tracking
